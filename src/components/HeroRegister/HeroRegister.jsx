@@ -1,10 +1,12 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import auth from "../../firebase/firebase.init";
 import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const HeroRegister = () => {
   const [success, setSuccess] = useState(false);
   const [registerError, setRegisterError] = useState(false);
+  const [showPass, setShowPass] = useState(false);
   const handleSubmitButton = (e) => {
     e.preventDefault();
 
@@ -17,6 +19,9 @@ const HeroRegister = () => {
 
     if (password.length < 6) {
       setRegisterError("password should be more than 6 character");
+      return;
+    } else if (!/[A-Z]/.test(password)) {
+      setRegisterError("Password should have at least one uppercase character");
       return;
     }
 
@@ -58,11 +63,17 @@ const HeroRegister = () => {
                   />
                 </div>
                 <div className="form-control">
-                  <label className="label">
+                  <label className="label relative ">
                     <span className="label-text">Password</span>
+                    <span
+                      className="absolute right-3 top-[52px]"
+                      onClick={() => setShowPass(!showPass)}
+                    >
+                      {showPass ? <FaEye /> : <FaEyeSlash />}
+                    </span>
                   </label>
                   <input
-                    type="password"
+                    type={showPass ? "text" : "password"}
                     placeholder="password"
                     name="password"
                     className="input input-bordered"
