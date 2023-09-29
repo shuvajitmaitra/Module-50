@@ -1,4 +1,5 @@
 import {
+  sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "firebase/auth";
@@ -30,7 +31,13 @@ const Login = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((result) => {
         console.log(result.user);
-        setSuccess("Login successful");
+        if (result.user.emailVerified) {
+          setSuccess("Login successful");
+        } else {
+          sendEmailVerification(result.user).then(() => {
+            alert("please check your email to verify you account");
+          });
+        }
       })
       .catch((error) => {
         console.error(error.message);
