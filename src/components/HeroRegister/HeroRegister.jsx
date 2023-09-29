@@ -1,7 +1,11 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import auth from "../../firebase/firebase.init";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const HeroRegister = () => {
   const [success, setSuccess] = useState(false);
@@ -33,6 +37,9 @@ const HeroRegister = () => {
       .then((result) => {
         console.log(result.user);
         setSuccess(true);
+        sendEmailVerification(result.user).then(() => {
+          alert("please check your email to verify you account");
+        });
       })
       .catch((error) => {
         console.error(error);
@@ -107,6 +114,9 @@ const HeroRegister = () => {
                 {registerError && (
                   <p className="text-red-600"> {registerError} </p>
                 )}
+                <p>
+                  already have an account <Link to={"/login"}>Login</Link>
+                </p>
               </form>
             </div>
           </div>
