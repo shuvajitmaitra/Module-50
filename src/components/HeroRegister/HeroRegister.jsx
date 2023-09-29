@@ -1,6 +1,7 @@
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  updateProfile,
 } from "firebase/auth";
 import auth from "../../firebase/firebase.init";
 import { useState } from "react";
@@ -14,10 +15,11 @@ const HeroRegister = () => {
   const handleSubmitButton = (e) => {
     e.preventDefault();
 
+    const name = e.target.name.value;
     const email = e.target.email.value;
     const password = e.target.password.value;
     const checkbox = e.target.terms.checked;
-    console.log("button clicked,", email, password, checkbox);
+    console.log("button clicked,", name, email, password, checkbox);
 
     setSuccess(false);
     setRegisterError(false);
@@ -37,6 +39,20 @@ const HeroRegister = () => {
       .then((result) => {
         console.log(result.user);
         setSuccess(true);
+
+        // profile update.............
+        updateProfile(result.user, {
+          displayName: name,
+          photoURL: "https://example.com/jane-q-user/profile.jpg",
+        })
+          .then(() => {
+            alert("your profile updated");
+          })
+          .catch((error) => {
+            setRegisterError(error.message);
+          });
+
+        // send verification email.................
         sendEmailVerification(result.user).then(() => {
           alert("please check your email to verify you account");
         });
