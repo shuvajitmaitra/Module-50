@@ -12,7 +12,8 @@ const HeroRegister = () => {
 
     const email = e.target.email.value;
     const password = e.target.password.value;
-    console.log("button clicked,", email, password);
+    const checkbox = e.target.terms.checked;
+    console.log("button clicked,", email, password, checkbox);
 
     setSuccess(false);
     setRegisterError(false);
@@ -22,6 +23,9 @@ const HeroRegister = () => {
       return;
     } else if (!/[A-Z]/.test(password)) {
       setRegisterError("Password should have at least one uppercase character");
+      return;
+    } else if (!checkbox) {
+      setRegisterError("Please check the terms and conditions");
       return;
     }
 
@@ -81,6 +85,16 @@ const HeroRegister = () => {
                   <label className="label">
                     <a href="#" className="label-text-alt link link-hover">
                       Forgot password?
+                    </a>
+                  </label>
+                </div>
+                <div className="">
+                  <input type="checkbox" name="terms" id="terms" />
+                  <label htmlFor="terms" className="label-text-alt">
+                    {" "}
+                    check the
+                    <a href="#" className="label-text-alt link link-hover">
+                      terms and conditions
                     </a>
                   </label>
                 </div>

@@ -1,7 +1,39 @@
+import { signInWithEmailAndPassword } from "firebase/auth";
+import auth from "../../firebase/firebase.init";
+import { useState } from "react";
+
 const Login = () => {
+  const [success, setSuccess] = useState(false);
+  const [loginError, setLoginError] = useState(false);
+  const handleSubmitBtn = (e) => {
+    e.preventDefault();
+
+    setLoginError(false);
+    setSuccess(false);
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    const checkbox = e.target.terms.checked;
+
+    console.log(checkbox);
+    // console.log(email, password);
+    if (!checkbox) {
+      setLoginError("please check term and condition");
+      return;
+    }
+    console.log(loginError);
+    signInWithEmailAndPassword(auth, email, password)
+      .then((result) => {
+        console.log(result.user);
+        setSuccess("Login successful");
+      })
+      .catch((error) => {
+        console.error(error.message);
+        setLoginError(true);
+      });
+  };
   return (
     <div className="lg:w-1/2 mx-auto p-5 md:p-10">
-      <form>
+      <form onSubmit={handleSubmitBtn}>
         <div className="mb-6">
           <label
             htmlFor="email"
@@ -34,18 +66,17 @@ const Login = () => {
         <div className="flex items-start mb-6">
           <div className="flex items-center h-5">
             <input
-              id="remember"
+              id="terms"
               type="checkbox"
               value=""
               className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
-              required
             ></input>
           </div>
           <label
-            htmlFor="remember"
+            htmlFor="terms"
             className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
           >
-            Remember me
+            Check the terms and conditions
           </label>
         </div>
         <button
@@ -54,6 +85,8 @@ const Login = () => {
         >
           Submit
         </button>
+        {success && <p> {success} </p>}
+        {loginError && <p> {loginError} </p>}
       </form>
     </div>
   );
